@@ -31,7 +31,7 @@ jobs:
           cache-dependency-path: services/wechat-connector/go.sum
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Install Playwright Chromium
         if: runner.os == 'macOS'

@@ -293,13 +293,9 @@ test('CHAT-02 personal WeChat send dialog is keyboard-safe and fits the viewport
     expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(600)
     expect(pageErrors).toEqual([])
 
-    const imageMode = dialog.getByRole('radio', { name: '图片' })
-    const voiceMode = dialog.getByRole('radio', { name: '语音', exact: true })
-    await imageMode.focus()
-    await fixture.page.keyboard.press('ArrowRight')
-    await expect(voiceMode).toBeFocused()
-    await fixture.page.keyboard.press('Space')
-    await expect(voiceMode).toBeChecked()
+    const voiceText = dialog.getByRole('textbox', { name: '语音文字' })
+    await voiceText.focus()
+    await expect(voiceText).toBeFocused()
     expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
       true
     )

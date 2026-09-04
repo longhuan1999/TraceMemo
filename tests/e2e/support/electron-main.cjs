@@ -253,6 +253,7 @@ const groupExitEvent = {
   detectedAt: fixtureNowMs - 60 * 1000
 }
 let groupExitMonitorState = {
+  enabled: connected,
   events: [groupExitEvent],
   running: connected,
   nativeMonitorActive: connected,

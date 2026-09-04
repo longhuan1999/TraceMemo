@@ -61,17 +61,13 @@ export async function launchTestApp(
   await page.waitForLoadState('domcontentloaded')
   if (options.now) await page.clock.setFixedTime(options.now)
   const setWindowContentSize = async (size: { width: number; height: number }): Promise<void> => {
-    await app.evaluate(({ BrowserWindow, screen }, nextSize) => {
+    await app.evaluate(({ BrowserWindow, screen }) => {
       const [window] = BrowserWindow.getAllWindows()
       if (!window) throw new Error('E2E BrowserWindow is unavailable')
       const { workArea } = screen.getPrimaryDisplay()
       window.setPosition(workArea.x + 40, workArea.y + 40)
-      window.setContentSize(nextSize.width, nextSize.height)
-    }, size)
-    await page.waitForFunction(
-      (nextSize) => window.innerWidth === nextSize.width && window.innerHeight === nextSize.height,
-      size
-    )
+    })
+    await page.setViewportSize(size)
     await page.evaluate(
       () =>
         new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
