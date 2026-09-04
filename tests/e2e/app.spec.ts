@@ -62,6 +62,7 @@ test('P0-01 an invalid directory can be corrected and retried without restarting
 
     await fixture.page.getByRole('button', { name: '选择目录' }).click()
     await expect(fixture.page.getByLabel('微信数据目录')).toHaveValue('fixture-account')
+    await expect(fixture.page.getByRole('heading', { name: '选择微信账号' })).toBeVisible()
     await fixture.page.getByRole('button', { name: '连接数据库' }).click()
     await expect(fixture.page.getByRole('navigation', { name: '一级导航' })).toBeVisible()
   } finally {
