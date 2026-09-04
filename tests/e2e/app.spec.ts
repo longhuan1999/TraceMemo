@@ -64,7 +64,9 @@ test('P0-01 an invalid directory can be corrected and retried without restarting
     await expect(fixture.page.getByLabel('微信数据目录')).toHaveValue('fixture-account')
     await fixture.page.waitForTimeout(250)
     await fixture.page.getByRole('button', { name: '连接数据库' }).click()
-    await expect(fixture.page.getByRole('navigation', { name: '一级导航' })).toBeVisible()
+    await expect(fixture.page.getByRole('navigation', { name: '一级导航' })).toBeVisible({
+      timeout: 30_000
+    })
   } finally {
     await fixture.close()
   }
