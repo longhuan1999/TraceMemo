@@ -19,6 +19,11 @@ test('APP-01 first launch renders a usable connection screen without uncaught er
     await fixture.setWindowContentSize({ width: 820, height: 600 })
     await expect(fixture.page.getByRole('heading', { name: 'TraceMemo（迹忆）' })).toBeVisible()
     await expect(fixture.page.getByRole('main')).not.toBeEmpty()
+    const loginLayout = await fixture.page.locator('.database-login-page').evaluate((element) => ({
+      width: Math.round(element.getBoundingClientRect().width),
+      viewportWidth: window.innerWidth
+    }))
+    expect(loginLayout.width).toBe(loginLayout.viewportWidth)
     expect(
       await fixture.page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
     ).toBe(true)
@@ -122,6 +127,13 @@ test('NAV-01 NAV-02 every top-level page is unique and switchable', async () => 
   try {
     const navigation = fixture.page.getByRole('navigation', { name: '一级导航' })
     await expect(navigation).toBeVisible()
+    const appShell = fixture.page.locator('.app-shell')
+    await expect(appShell).toBeVisible()
+    const shellLayout = await appShell.evaluate((element) => ({
+      width: Math.round(element.getBoundingClientRect().width),
+      viewportWidth: window.innerWidth
+    }))
+    expect(shellLayout.width).toBe(shellLayout.viewportWidth)
     for (const label of labels) {
       await expect(navigation.getByRole('button', { name: label })).toHaveCount(1)
       await navigation.getByRole('button', { name: label }).click()
@@ -394,6 +406,9 @@ test('SETTINGS-02 basic settings controls fit a narrow viewport and keep their s
     await expect(fixture.page.getByRole('button', { name: '存储与导出' })).toHaveCount(0)
     const autoLoginSwitch = fixture.page.getByRole('switch', { name: '启动时自动连接数据库' })
     await expect(autoLoginSwitch).toBeVisible()
+    await expect(autoLoginSwitch).toBeChecked()
+    await autoLoginSwitch.click()
+    await expect(autoLoginSwitch).not.toBeChecked()
     await autoLoginSwitch.click()
     await expect(autoLoginSwitch).toBeChecked()
 
@@ -450,7 +465,9 @@ test('UPDATE-01 simulated startup update navigates to live progress and never ex
     await expect(fixture.page.getByText('v2.0.0 已准备完成')).toBeVisible({ timeout: 5_000 })
     await fixture.page.getByRole('button', { name: '立即重启更新' }).click()
     await expect(
-      fixture.page.getByText('开发模拟模式：更新安装动作已模拟，未实际退出应用。')
+      fixture.page
+        .getByRole('region', { name: 'Notifications (F8)' })
+        .getByText('开发模拟模式：更新安装动作已模拟，未实际退出应用。')
     ).toBeVisible()
     await expect(fixture.page.getByRole('heading', { name: '关于' })).toBeVisible()
     expect(pageErrors).toEqual([])

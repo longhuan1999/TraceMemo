@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '../../..')
 const fixture = structuredClone(require(path.join(root, 'tests/fixtures/chat-data.json')))
 const userData = process.env.WXE_E2E_USER_DATA
 if (!userData) throw new Error('WXE_E2E_USER_DATA is required')
+const backgroundE2E = process.env.WXE_E2E_HEADLESS === '1'
 app.setPath('userData', userData)
 app.setPath('logs', path.join(userData, 'logs'))
 app.commandLine.appendSwitch('disable-gpu')
@@ -1227,7 +1228,7 @@ app.whenReady().then(() => {
       sandbox: false
     }
   })
-  window.once('ready-to-show', () => window.show())
+  if (!backgroundE2E) window.once('ready-to-show', () => window.show())
   window.loadFile(path.join(root, 'out/renderer/index.html'))
 })
 
