@@ -1217,8 +1217,9 @@ for (const channel of [
 
 app.whenReady().then(() => {
   const window = new BrowserWindow({
-    width: 1440,
-    height: 960,
+    // Keep the E2E window aligned with createWindow() in src/main/index.ts.
+    width: 1400,
+    height: 800,
     show: false,
     backgroundColor: '#ffffff',
     webPreferences: {
