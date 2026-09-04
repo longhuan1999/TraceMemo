@@ -290,9 +290,11 @@ describe('daily report controls', () => {
 
     const retryButton = await screen.findByRole('button', { name: '使用所选模型重新生成' })
     const retryModel = screen.getByRole('combobox', { name: '切换模型' })
+    await waitFor(() => expect(retryModel).toBeEnabled())
     await user.click(retryModel)
-    expect(screen.getByRole('option', { name: '备用服务 · 备用模型' })).toBeVisible()
-    await user.click(screen.getByRole('option', { name: '备用服务 · 备用模型' }))
+    const fallbackModel = await screen.findByRole('option', { name: '备用服务 · 备用模型' })
+    expect(fallbackModel).toBeVisible()
+    await user.click(fallbackModel)
     fireEvent.click(retryButton)
     expect(onRetry).toHaveBeenCalledWith(
       expect.objectContaining({ providerId: 'provider-2', model: 'model-2' })

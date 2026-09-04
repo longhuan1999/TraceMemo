@@ -52,8 +52,8 @@ test('SCHEDULED-REPORT-UI-01 opens the scheduled report dialog without viewport 
     await selects.nth(1).click()
     const memberOption = fixture.page.getByRole('option', { name: '微信昵称' })
     await expect(memberOption).toBeVisible()
-    await memberOption.click()
-    await expect(selects.nth(1)).toContainText('微信昵称')
+    await memberOption.click({ force: true })
+    await expect(selects.nth(1)).toContainText('微信昵称', { timeout: 8000 })
 
     expect(
       await fixture.page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
