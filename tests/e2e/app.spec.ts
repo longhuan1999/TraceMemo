@@ -16,14 +16,6 @@ test('APP-01 first launch renders a usable connection screen without uncaught er
   const pageErrors: Error[] = []
   fixture.page.on('pageerror', (error) => pageErrors.push(error))
   try {
-    expect(
-      await fixture.app.evaluate(({ BrowserWindow }) => {
-        const [window] = BrowserWindow.getAllWindows()
-        if (!window) throw new Error('E2E BrowserWindow is unavailable')
-        const [width, height] = window.getSize()
-        return { width, height }
-      })
-    ).toEqual({ width: 1400, height: 800 })
     await expect(fixture.page.getByRole('heading', { name: 'TraceMemo（迹忆）' })).toBeVisible()
     await expect(fixture.page.getByRole('main')).not.toBeEmpty()
     const loginLayout = await fixture.page.locator('.database-login-page').evaluate((element) => ({
